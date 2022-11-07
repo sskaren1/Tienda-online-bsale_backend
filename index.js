@@ -3,13 +3,16 @@
 import express from "express";
 // Importing Environment Variables
 import dotenv from "dotenv";
+// Importing routes
+import router from "./routes/index.js"
 
 // Setting environment variables
 dotenv.config();
 // Configuring express
 const app = express();
 
-
+//Routing
+app.use('/', router)
 
 // Port
 const PORT = process.env.PORT || 4000
