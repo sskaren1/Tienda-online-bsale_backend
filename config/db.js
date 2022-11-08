@@ -15,7 +15,7 @@ const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
         acquire: 30000, // tiempo antes de comentar el error
         idle: 10000 // tiempo que debe de transcurrir para finalizar una conexión a la db
     },
-    operatorAliases: false
+    operatorAliases: false,
 })
 
 export default db;

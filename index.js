@@ -3,7 +3,8 @@ import express from "express";
 // Importing Environment Variables
 import dotenv from "dotenv";
 // Importing routes
-import router from "./routes/index.js"
+import productsRoutes from "./routes/productsRoutes.js"
+import categoriesRoutes from "./routes/categoriesRoutes.js"
 // Importing db
 import db from './config/db.js'
 
@@ -21,7 +22,8 @@ try {
 }
 
 //Routing
-app.use('/', router)
+app.use('/api/products', productsRoutes);
+app.use('/api/categories', categoriesRoutes);
 
 // Port
 const PORT = process.env.PORT || 4000
