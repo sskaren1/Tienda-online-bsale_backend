@@ -17,20 +17,20 @@ dotenv.config();
 const app = express();
 
 // Configurar CORS
-// const whitelist = [process.env.FRONTEND_URL];
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     console.log(origin);
-//     if (whitelist.includes(origin)) {
-//       // Puede consultar la API
-//       callback(null, true);
-//     } else {
-//       // No esta permitido
-//       callback(new Error("Error de Cors"));
-//     }
-//   },
-// };
-// app.use(cors(corsOptions));
+const whitelist = [process.env.FRONTEND_URL];
+const corsOptions = {
+  origin: function (origin, callback) {
+    console.log(origin);
+    if (whitelist.includes(origin)) {
+      // Puede consultar la API
+      callback(null, true);
+    } else {
+      // No esta permitido
+      callback(new Error("Error de Cors"));
+    }
+  },
+};
+app.use(cors(corsOptions));
 
 // Connecting to database
 try {
