@@ -1,39 +1,83 @@
 // Importing sequelize
-import { Sequelize } from 'sequelize';
+import { Sequelize } from "sequelize";
 // Importing Models
 import Products from "./../models/products.js";
+import Categories from "./../models/categories.js";
 
+// Get all products
 const allProducts = async (req, res) => {
   try {
-    const products = await Products.findAll();
+    const products = await Products.findAll({
+      order: [["category", "ASC"]],
+    });
     res.json(products);
   } catch (error) {
-    // const error= new Error("Tu cuenta no ha sido confirmada");
     return res.status(500).json({ message: error.message });
   }
 };
 
-// const filterProducts = (req, res) => {
-//   res.send("lista  filtrada productos");
-// };
-// const orderProducts = (req, res) => {
-//   res.send("lista  filtrada productos");
-// };
+// Filtering products by category
+const filterByCategory = async (req, res) => {
+  const { nameCategory } = req.params;
+
+  try {
+    if (nameCategory === "all") {
+      const products = await Products.findAll({
+        order: [["category", "ASC"]],
+      });
+      res.json(products);
+    } else {
+      const categorie = await Categories.findOne({
+        where: { name: nameCategory },
+      });
+      console.log("categorie", categorie);
+      const { id } = categorie;
+
+      // Consult the products
+      const product = await Products.findAll({
+        where: {
+          category: id,
+        },
+      });
+      if (product) {
+        res.json(product);
+      }
+    }
+  } catch (error) {
+    error = new Error("No hay productos");
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// Sort products ascending
+const sortProducts = async (req, res) => {
+  const { type, property } = req.params;
+  try {
+    const products = await Products.findAll({
+      order: [[property, type]],
+    });
+    res.json(products);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// Product finder
 const searchProduct = async (req, res) => {
-  const { nombre } = req.params;
+  const { name } = req.params;
 
   // Validar que no esté vacío el campo de busqueda
-  if(!nombre.trim()) {
-    return res.redirect('back');
+  if (!name.trim()) {
+    return res.redirect("back");
   }
 
   // Consult the products
   const product = await Products.findAll({
     where: {
       name: {
-        [Sequelize.Op.like] : '%' + nombre + '%'
+        [Sequelize.Op.like]: "%" + name + "%",
       },
-    }
+    },
   });
   // const product = await Products.findAll({name});
   if (product) {
@@ -45,14 +89,4 @@ const searchProduct = async (req, res) => {
   }
 };
 
-// const shoppingCart = (req, res) => {
-//   res.send("producto buscado");
-// };
-
-export {
-  allProducts,
-  // filterProducts,
-  // orderProducts,
-  searchProduct,
-  // shoppingCart,
-};
+export { allProducts, filterByCategory, sortProducts, searchProduct };
