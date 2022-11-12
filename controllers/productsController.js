@@ -79,10 +79,8 @@ const searchProduct = async (req, res) => {
       },
     },
   });
-  // const product = await Products.findAll({name});
   if (product) {
     res.json(product);
-    // res.json({msg:"Producto existente"})
   } else {
     const error = new Error("Producto no existe");
     return res.status(404).json({ msg: error.message });
